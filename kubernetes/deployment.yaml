@@ -1,14 +1,24 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: flask-app
+  name: my-flask-app
 spec:
-  replicas: 2
+  replicas: 3
+  selector:
+    matchLabels:
+      app: my-flask-app
   template:
+    metadata:
+      labels:
+        app: my-flask-app
     spec:
       containers:
-        name: flask
-        image: my-flask-app:latest
+      - name: my-flask-app
+        image: odnatret/my-flask-app:latest
         ports:
-          containerPort: 5000
+        - containerPort: 5000
+        resources:
+          requests:
+            cpu: "100m"
+            memory: "128Mi"
 
