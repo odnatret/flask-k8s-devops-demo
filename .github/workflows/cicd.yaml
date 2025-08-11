@@ -27,8 +27,8 @@ jobs:
         run: |
           minikube start --driver=docker
           minikube kubectl -- apply -f kubernetes/ --validate=false
-       - name: Get Minikube CA
-         run: |
+      - name: Get Minikube CA
+        run: |
           minikube ssh "sudo cat /var/lib/minikube/certs/ca.crt" > minikubeCA.crt
           sudo cp minikubeCA.crt /usr/local/share/ca-certificates/
           sudo update-ca-certificates
