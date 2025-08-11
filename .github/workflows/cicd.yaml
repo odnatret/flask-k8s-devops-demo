@@ -23,6 +23,11 @@ jobs:
           tags: |
             ${{ secrets.DOCKER_HUB_USERNAME }}/my-flask-app:latest
             ${{ secrets.DOCKER_HUB_USERNAME }}/my-flask-app:${{ github.sha }}
+      - name: Configure Kubernetes
+        run: |
+          mkdir -p ~/.kube
+          echo "${{ secrets.KUBE_CONFIG }}" > ~/.kube/config
+          kubectl config view
       - name: Deploy to Kubernetes
         run: |
           echo "${{ secrets.KUBE_CONFIG }}" > kubeconfig.yaml
