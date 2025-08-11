@@ -3,8 +3,8 @@
 ## 🛠️ Стек:  
 - Python (Flask)  
 - Docker + GitHub Actions  
-- Terraform (AWS EKS)  
-- Kubernetes + Helm  
+- Terraform 
+- Kubernete
 - Prometheus + Grafana  
 ## 🚀 Запуск:  
 1. Собрать Docker: `docker build -t my-flask-app .`  
