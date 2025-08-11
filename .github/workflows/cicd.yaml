@@ -26,10 +26,7 @@ jobs:
       - name: Start Minikube
         run: |
           minikube start --driver=docker
-          minikube kubectl -- config view --flatten > kubeconfig.yaml
-          echo "KUBE_CONFIG<<EOF" >> $GITHUB_ENV
-          cat kubeconfig.yaml >> $GITHUB_ENV
-          echo "EOF" >> $GITHUB_ENV
+          minikube kubectl -- apply -f kubernetes/ --validate=false
 
       - name: Configure Kubernetes
         run: |
