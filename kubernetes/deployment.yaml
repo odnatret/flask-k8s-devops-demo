@@ -19,6 +19,12 @@ spec:
         image: odnatret/my-flask-app:latest
         ports:
         - containerPort: 5000
+        readinessProbe:
+          httpGet:
+            path: /
+            port: 5000
+          initialDelaySeconds: 3
+          periodSeconds: 3
         resources:
           requests:
             cpu: "400m"
