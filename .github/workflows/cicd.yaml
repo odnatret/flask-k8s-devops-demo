@@ -60,14 +60,14 @@ jobs:
         run: |
           echo "${{ secrets.KUBE_CONFIG }}" > kubeconfig.yaml
           export KUBECONFIG=kubeconfig.yaml
-
-      - name: Update Kubernetes Deployment
-        run: |
-          kubectl set image deployment/my-flask-app my-flask-app=${{ env.DOCKER_IMAGE }}:${{ github.sha }} -n ${{ env.KUBE_NAMESPACE }}
-          kubectl rollout status deployment/my-flask-app -n ${{ env.KUBE_NAMESPACE }}
           
       - name: Deploy to Minikube
         run: |
           kubectl apply -f kubernetes/deployment.yaml
           kubectl apply -f kubernetes/service.yaml
           kubectl rollout status deployment/my-flask-app
+          
+      - name: Update Kubernetes Deployment
+        run: |
+          kubectl set image deployment/my-flask-app my-flask-app=${{ env.DOCKER_IMAGE }}:${{ github.sha }} -n ${{ env.KUBE_NAMESPACE }}
+          kubectl rollout status deployment/my-flask-app -n ${{ env.KUBE_NAMESPACE }}
