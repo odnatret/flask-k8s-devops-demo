@@ -70,8 +70,6 @@ jobs:
       - name: Checks
         run: |
           kubectl get pods -n ${{ env.KUBE_NAMESPACE }}
-          kubectl describe pod <имя-пода> -n ${{ env.KUBE_NAMESPACE }}
-          kubectl logs <имя-пода> -n ${{ env.KUBE_NAMESPACE }}
       - name: Update Kubernetes Deployment
         run: |
           kubectl set image deployment/my-flask-app my-flask-app=${{ env.DOCKER_IMAGE }}:${{ github.sha }} -n ${{ env.KUBE_NAMESPACE }}
