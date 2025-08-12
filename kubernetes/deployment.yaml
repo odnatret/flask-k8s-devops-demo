@@ -3,7 +3,7 @@ kind: Deployment
 metadata:
   name: my-flask-app
 spec:
-  replicas: 3
+  replicas: 1
   selector:
     matchLabels:
       app: my-flask-app
@@ -19,6 +19,6 @@ spec:
         - containerPort: 5000
         resources:
           requests:
-            cpu: "100m"
+            cpu: "400m"
             memory: "128Mi"
 
