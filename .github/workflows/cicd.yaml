@@ -58,7 +58,6 @@ jobs:
         
     - name: Configure registry access
       run: |
-        # Авторизация Minikube в GHCR
         kubectl create secret docker-registry ghcr-secret \
           --docker-server=ghcr.io \
           --docker-username=${{ github.actor }} \
@@ -67,13 +66,11 @@ jobs:
         
     - name: Deploy to Minikube
       run: |
-        # Подставляем актуальный образ в deployment.yaml
         sed -i "s|ghcr.io/.*/my-app:latest|${{ env.DOCKER_IMAGE }}:${{ github.sha }}|g" kubernetes/deployment.yaml
         
         kubectl apply -f kubernetes/deployment.yaml
         kubectl apply -f kubernetes/service.yaml
         
-        # Увеличиваем timeout и добавляем debug информацию
         kubectl rollout status deployment/my-flask-app --timeout=300s
         kubectl describe deployment/my-flask-app
         kubectl get pods -n ${{ env.KUBE_NAMESPACE }}
