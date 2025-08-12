@@ -40,10 +40,22 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-
-      - name: Install kubectl
-        uses: azure/setup-kubectl@v3
-
+        
+      - name: Install Minikube and kubectl
+        run: |
+          sudo apt-get update -q
+          sudo apt-get install -qy conntrack  # Требуется для Minikube
+          curl -LO https://storage.googleapis.com/minikube/releases/latest/minikube-linux-amd64
+          sudo install minikube-linux-amd64 /usr/local/bin/minikube
+          minikube version
+          sudo apt-get install -y kubectl
+          
+      - name: Start Minikube cluster
+        run: |
+          minikube start --driver=docker --force
+          minikube status
+          kubectl cluster-info
+          
       - name: Configure Minikube (или внешний кластер)
         run: |
           echo "${{ secrets.KUBE_CONFIG }}" > kubeconfig.yaml
@@ -53,3 +65,9 @@ jobs:
         run: |
           kubectl set image deployment/my-app my-app=${{ env.DOCKER_IMAGE }}:${{ github.sha }} -n ${{ env.KUBE_NAMESPACE }}
           kubectl rollout status deployment/my-app -n ${{ env.KUBE_NAMESPACE }}
+          
+      - name: Deploy to Minikube
+        run: |
+          kubectl apply -f kubernetes/deployment.yaml
+          kubectl apply -f kubernetes/service.yaml
+          kubectl rollout status deployment/my-app
