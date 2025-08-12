@@ -44,7 +44,7 @@ jobs:
       - name: Install Minikube and kubectl
         run: |
           sudo apt-get update -q
-          sudo apt-get install -qy conntrack  # Требуется для Minikube
+          sudo apt-get install -qy conntrack
           curl -LO https://storage.googleapis.com/minikube/releases/latest/minikube-linux-amd64
           sudo install minikube-linux-amd64 /usr/local/bin/minikube
           minikube version
@@ -52,11 +52,11 @@ jobs:
           
       - name: Start Minikube cluster
         run: |
-          minikube start --driver=docker --force
+          minikube start --driver=docker --force --cpus=2 --memory=4000mb
           minikube status
           kubectl cluster-info
           
-      - name: Configure Minikube (или внешний кластер)
+      - name: Configure Minikube
         run: |
           echo "${{ secrets.KUBE_CONFIG }}" > kubeconfig.yaml
           export KUBECONFIG=kubeconfig.yaml
@@ -65,9 +65,9 @@ jobs:
         run: |
           kubectl apply -f kubernetes/deployment.yaml
           kubectl apply -f kubernetes/service.yaml
-          kubectl rollout status deployment/my-flask-app
+          kubectl rollout status deployment/my-flask-app --timeout=120s
           
       - name: Update Kubernetes Deployment
         run: |
           kubectl set image deployment/my-flask-app my-flask-app=${{ env.DOCKER_IMAGE }}:${{ github.sha }} -n ${{ env.KUBE_NAMESPACE }}
-          kubectl rollout status deployment/my-flask-app -n ${{ env.KUBE_NAMESPACE }}
+          kubectl rollout status deployment/my-flask-app -n ${{ env.KUBE_NAMESPACE }} --timeout=120s
